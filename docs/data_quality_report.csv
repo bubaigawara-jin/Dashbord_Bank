@@ -1,0 +1,27 @@
+table,issue,count
+addresses,"nulls in Street (conserves, marques 'Inconnu')",24
+addresses,"nulls in City (conserves, marques 'Inconnu')",26
+addresses,"nulls in Country (conserves, marques 'Inconnu')",24
+addresses,doublons exacts supprimes,12
+branches,doublons exacts supprimes,0
+customers,nulls in FirstName (remplaces par 'Inconnu'),22
+customers,nulls in LastName (remplaces par 'Inconnu'),23
+customers,dates de naissance futures invalidees,0
+customers,dates de naissance non parsables/nulles,0
+customers,doublons sur CustomerID supprimes,11
+accounts,dates d'ouverture futures invalidees,0
+accounts,dates d'ouverture non parsables/nulles,33
+accounts,"comptes avec solde negatif (conserves, a surveiller)",10
+accounts,doublons sur AccountID supprimes,16
+accounts,"comptes avec CustomerID orphelin (conserves, flag_orphelin)",0
+loans,StartDate non parsables/nulles,6
+loans,EstimatedEndDate non parsables/nulles,6
+loans,doublons sur LoanID supprimes,3
+loans,"prets avec AccountID orphelin (conserves, flag_orphelin)",0
+transactions,dates non parsables/nulles,1000
+transactions,transactions avec date future (flag_date_future),69
+transactions,"montants negatifs (conserves, a verifier)",0
+transactions,doublons sur TransactionID supprimes,500
+transactions,auto-transferts (Origin == Destination),30
+transactions,AccountOriginID orphelin,0
+transactions,AccountDestinationID orphelin,0
