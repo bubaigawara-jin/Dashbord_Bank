@@ -1,0 +1,17 @@
+# Sorties generees par le pipeline (regenerables via python/01, 02, 03)
+data/clean/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# OS / editeurs
+.DS_Store
+.vscode/
+.idea/
+
+# Power BI (fichiers binaires lourds, a gerer en Git LFS si besoin)
+*.pbix
