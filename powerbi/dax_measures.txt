@@ -1,0 +1,91 @@
+// =====================================================================
+// Mesures DAX — Dashboard KPI Bancaires & Fraude
+// A creer dans Power BI : Modelisation > Nouvelle mesure
+// Table hote suggeree : creez une table dediee "Mesures" (table vide)
+// pour toutes les ranger proprement, ou placez-les sur vw_fact_transactions.
+// =====================================================================
+
+// ---------- VOLUME & BALANCE ----------
+
+Balance Totale =
+SUM ( vw_dim_account[Balance] )
+
+Nb Clients =
+DISTINCTCOUNT ( vw_dim_customer_360[CustomerID] )
+
+Nb Comptes =
+DISTINCTCOUNT ( vw_dim_account[AccountID] )
+
+Nb Transactions =
+COUNTROWS ( vw_fact_transactions )
+
+Montant Total Transactions =
+SUM ( vw_fact_transactions[Amount] )
+
+Montant Moyen Transaction =
+AVERAGE ( vw_fact_transactions[Amount] )
+
+// ---------- PRETS / RISQUE DE CREDIT ----------
+
+Encours Prets =
+SUM ( vw_fact_loans[PrincipalAmount] )
+
+Encours Prets en Retard =
+CALCULATE (
+    SUM ( vw_fact_loans[PrincipalAmount] ),
+    vw_fact_loans[StatutPret] = "Overdue"
+)
+
+NPL Ratio % =
+DIVIDE ( [Encours Prets en Retard], [Encours Prets] )
+
+Taux Interet Moyen % =
+AVERAGE ( vw_fact_loans[InterestRate] )
+
+// ---------- FRAUDE ----------
+
+Nb Transactions Suspectes =
+CALCULATE (
+    COUNTROWS ( vw_fact_transactions ),
+    vw_fact_transactions[is_suspected_fraud] = 1
+)
+
+Taux de Fraude % =
+DIVIDE ( [Nb Transactions Suspectes], [Nb Transactions] )
+
+Montant Suspect Total =
+CALCULATE (
+    SUM ( vw_fact_transactions[Amount] ),
+    vw_fact_transactions[is_suspected_fraud] = 1
+)
+
+Score Risque Moyen =
+AVERAGE ( vw_fact_transactions[fraud_risk_score] )
+
+// ---------- TIME INTELLIGENCE (necessite dim_date marquee "table de dates") ----------
+
+Montant Total M-1 =
+CALCULATE (
+    [Montant Total Transactions],
+    DATEADD ( dim_date[DateKey], -1, MONTH )
+)
+
+Evolution Montant MoM % =
+DIVIDE (
+    [Montant Total Transactions] - [Montant Total M-1],
+    [Montant Total M-1]
+)
+
+Montant Total YTD =
+TOTALYTD ( [Montant Total Transactions], dim_date[DateKey] )
+
+// ---------- SEGMENTATION ----------
+
+Balance Moyenne par Client =
+DIVIDE ( [Balance Totale], [Nb Clients] )
+
+% Comptes Actifs =
+DIVIDE (
+    CALCULATE ( [Nb Comptes], vw_dim_account[StatutCompte] = "Active" ),
+    [Nb Comptes]
+)
