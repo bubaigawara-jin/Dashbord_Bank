@@ -1,0 +1,4 @@
+pandas>=2.0
+numpy>=1.24
+SQLAlchemy>=2.0
+pymysql>=1.1
